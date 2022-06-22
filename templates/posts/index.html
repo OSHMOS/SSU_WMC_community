@@ -6,6 +6,8 @@
   <a href={% url 'account_signup' %}>회원가입</a>
 {% endif %}
 <div>
+  <p><a href={% url 'post_create' %}>작성하기</a></p>
+  <br>
   {% for post in posts %}
     <span>{{ post.id }}</span>
     <span><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></span>
