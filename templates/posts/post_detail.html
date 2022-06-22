@@ -1,0 +1,10 @@
+<div>
+  <span>{{ post.author }}</span>
+  &nbsp;&nbsp;&nbsp;
+  <span>{{ post.dt_created }}</span>
+  <hr>
+  <h2>{{ post.title }}</h2>
+  <p>{{ post.content }}</p>
+  <br>
+  <a href={% url 'index' %}>돌아가기</a>
+</div>
