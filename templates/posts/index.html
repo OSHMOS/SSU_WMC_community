@@ -1,1 +1,16 @@
-home page
+{% if user.is_authenticated %}
+  <a href={% url 'account_logout' %}>로그아웃</a>
+  <p>안녕하세요. {{ user }}님</p>
+{% else %}
+  <a href={% url 'account_login' %}>로그인</a>
+  <a href={% url 'account_signup' %}>회원가입</a>
+{% endif %}
+<div>
+  {% for post in posts %}
+    <span>{{ post.id }}</span>
+    <span>{{ post.title }}</span>
+    <span>{{ post.author }}</span>
+    <span>{{ post.dt_created }}</span>
+    <br>
+  {% endfor %}
+</div>
