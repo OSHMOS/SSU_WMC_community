@@ -50,3 +50,14 @@ def post_update(request, post_id):
             return render(request, 'posts/post_not_access.html', ctx)
     ctx = {'form' : form}
     return render(request, 'posts/post_update.html', ctx)
+
+
+@login_required(login_url='account_login')
+def post_delete(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.author == request.user:
+        post.delete()
+    else:
+        ctx = {'post' : post}
+        return render(request, 'posts/post_not_access.html', ctx)
+    return redirect('index')
