@@ -41,13 +41,13 @@
         <li class="page-item">
             <a href="?page={{post_list.previous_page_number}}"
               class="page-link">
-                이전
+                &lt;
             </a>
         </li>
         {% else %}
         <li class="page-item disabled">
             <a href="#" class="page-link" tabindex="-1" aria-disabled="true">
-                이전
+                &lt;
             </a>
         </li>
         {% endif %}
@@ -72,7 +72,7 @@
         <li class="page-item">
             <a href="?page={{post_list.next_page_number}}"
               class="page-link">
-                다음
+                &gt;
             </a>
         </li>
         {% endif %}

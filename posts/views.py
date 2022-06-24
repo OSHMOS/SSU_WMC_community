@@ -92,7 +92,7 @@ def comment_update(request, comment_id):
 
     if comment.author != request.user:
         messages.error(request, '해당 댓글 수정 권한이 없습니다.')
-        return redirect('posts:post_detail', id=comment.post.id)
+        return redirect('posts:post_detail', post_id=comment.post.id)
     
     if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
@@ -101,8 +101,19 @@ def comment_update(request, comment_id):
             comment.author = request.user
             comment.dt_updated = timezone.now()
             comment.save()
-            return redirect('posts:post_detail', comment.post.id)
+            return redirect('posts:post_detail', post_id=comment.post.id)
     else:
         form = CommentForm(instance=comment)
     ctx = {'form' : form, 'comment' : comment}
     return render(request, 'posts/comment_update.html', ctx)
+
+
+@login_required(login_url='account_login')
+def comment_delete(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if comment.author != request.user:
+        messages.error(request, '해당 댓글 삭제 권한이 없습니다.')
+        return redirect('posts:post_detail', post_id=comment.post.id)
+    else:
+        comment.delete()
+    return redirect('posts:post_detail', post_id=comment.post.id)
