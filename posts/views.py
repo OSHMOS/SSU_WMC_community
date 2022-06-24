@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.contrib import messages
-from .models import Post
-from .forms import Postform
+from .models import Post, Comment
+from .forms import Postform, CommentForm
 
 # Create your views here.
 def index(request):
@@ -74,3 +75,13 @@ def post_delete(request, post_id):
     else:
         post.delete()
     return redirect('posts:post_list')
+
+
+@login_required(login_url='account_login')
+def comment_create(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    content = request.POST.get('content')
+    comment = Comment(post=post, content=content, author=request.user)
+    comment.save()
+    return redirect('posts:post_detail', post_id)
+    
