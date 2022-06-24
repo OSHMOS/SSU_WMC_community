@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.contrib import messages
 from .models import Post
 from .forms import Postform
 
@@ -44,6 +45,10 @@ def post_create(request):
 @login_required(login_url='account_login')
 def post_update(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+
+    if post.author != request.user:
+        messages.error(request, '해당 게시글 수정 권한이 없습니다.')
+        return redirect('posts:post_detail', post_id) 
     
     if request.method == "POST":
         form = Postform(request.POST, instance=post)
@@ -53,11 +58,7 @@ def post_update(request, post_id):
             post.save()
             return redirect('posts:post_detail', post.id)
     else:
-        if post.author == request.user:
-            form = Postform(instance=post)
-        else:
-            ctx = {'post' : post}
-            return render(request, 'posts/post_not_access.html', ctx)
+        form = Postform(instance=post)
     ctx = {'form' : form}
     return render(request, 'posts/post_update.html', ctx)
 
@@ -65,9 +66,9 @@ def post_update(request, post_id):
 @login_required(login_url='account_login')
 def post_delete(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if post.author == request.user:
-        post.delete()
+    if post.author != request.user:
+        messages.error(request, '해당 게시글 삭제 권한이 없습니다.')
+        return redirect('posts:post_detail', post_id)
     else:
-        ctx = {'post' : post}
-        return render(request, 'posts/post_not_access.html', ctx)
+        post.delete()
     return redirect('posts:post_list')
