@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "posts",
     "common",
+    "django_seed",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
