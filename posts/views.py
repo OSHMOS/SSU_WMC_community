@@ -34,7 +34,7 @@ def post_create(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('index')
+            return redirect('posts:post_list')
     else:
         form = Postform()
     ctx = {'form' : form}
@@ -51,7 +51,7 @@ def post_update(request, post_id):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('post_detail', post.id)
+            return redirect('posts:post_detail', post.id)
     else:
         if post.author == request.user:
             form = Postform(instance=post)
@@ -70,4 +70,4 @@ def post_delete(request, post_id):
     else:
         ctx = {'post' : post}
         return render(request, 'posts/post_not_access.html', ctx)
-    return redirect('index')
+    return redirect('posts:post_list')
