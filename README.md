@@ -1,4 +1,4 @@
-# SSU_WMC_YB_community
+# SSU_WMC_community
 # 숭실대 웨스트민스터 합창단 YB 게시판
 
 ### made by OSHMOS.
