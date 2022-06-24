@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # 동일한 기능을 여러 웹페이지에서 작동하게하는 앱
     "django.contrib.sites",
     "posts",
+    "common",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -145,7 +146,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'posts.User'
+AUTH_USER_MODEL = 'common.User'
 LOGIN_REDIRECT_URL = 'index'
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
