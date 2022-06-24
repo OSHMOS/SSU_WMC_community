@@ -85,3 +85,24 @@ def comment_create(request, post_id):
     comment.save()
     return redirect('posts:post_detail', post_id)
     
+
+@login_required(login_url='account_login')
+def comment_update(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if comment.author != request.user:
+        messages.error(request, '해당 댓글 수정 권한이 없습니다.')
+        return redirect('posts:post_detail', id=comment.post.id)
+    
+    if request.method == "POST":
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.dt_updated = timezone.now()
+            comment.save()
+            return redirect('posts:post_detail', comment.post.id)
+    else:
+        form = CommentForm(instance=comment)
+    ctx = {'form' : form, 'comment' : comment}
+    return render(request, 'posts/comment_update.html', ctx)
