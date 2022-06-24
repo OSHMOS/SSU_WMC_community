@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="user-select: auto;">
+  <div class="container d-flex" style="user-select: auto;">
+      <div class="d-flex">
+          <a class="navbar-brand" href="{% url 'posts:index' %}" style="user-select: auto;">Westminster Choir</a>
+          <a href="#" class="nav-link text-dark" style="user-select: auto;">About</a>
+          <a href="{% url 'posts:post_list' %}" class="nav-link text-dark" style="user-select: auto;">게시판</a>
+      </div>
+
+      <button class="btn btn-dark d-inline-block d-lg-none ml-auto collapsed"
+              type="button" style="user-select: auto;"
+              data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bs bs-list fs-5" style="user-select: auto;"></i>
+      </button>
+      <div class="navbar-collapse collapse justify-content-end" id="navbarNav" style="user-select: auto;">
+          <ul class="nav navbar-nav ml-auto" style="user-select: auto;">
+              {% if user.is_authenticated %}
+                  <li class="nav-item">
+                      <span class="nav-link">안녕하세요. {{ user }}님!</span>
+                  </li>
+                  <li class="nav-item">
+                      <a href="{% url 'account_logout' %}" class="nav-link">로그아웃</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item " style="user-select: auto;">
+                      <a class="nav-link" href="{% url 'account_login' %}" style="user-select: auto;"><i class="fas fa-sign-in-alt" style="user-select: auto;"></i> 로그인</a>
+                  </li>
+                  <li class="nav-item " style="user-select: auto;">
+                      <a class="nav-link" href="{% url 'account_signup' %}" style="user-select: auto;"><i class="fas fa-user-plus" style="user-select: auto;"></i> 회원가입</a>
+                  </li>  
+              {% endif %}
+          </ul>
+      </div>
+  </div>
+</nav>

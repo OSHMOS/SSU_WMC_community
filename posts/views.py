@@ -5,9 +5,18 @@ from .forms import Postform
 
 # Create your views here.
 def index(request):
-    posts = Post.objects.all()
-    ctx = {'posts' : posts}
-    return render(request, 'posts/index.html', ctx)
+    return render(request, 'posts/index.html')
+
+
+def post_list(request):
+    post_list = Post.objects.order_by('-dt_created')
+    paginator = Paginator(post_list, 10)
+    curr_page_num = request.GET.get("page")
+    if curr_page_num == None:
+        curr_page_num = 1
+    page = paginator.page(curr_page_num)
+    ctx = {"post_list": page}
+    return render(request, 'posts/post_list.html', ctx)
 
 
 def post_detail(request, post_id):

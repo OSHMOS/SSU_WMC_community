@@ -1,0 +1,9 @@
+.bs-list {
+  font-size: 40px;
+  color: white;
+}
+
+.comment {
+  border-top:dotted 1px #ddd;
+  font-size:0.7em;
+}
