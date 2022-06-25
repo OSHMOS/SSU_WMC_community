@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # 동일한 기능을 여러 웹페이지에서 작동하게하는 앱
     "django.contrib.sites",
     "posts",
     "common",
@@ -151,6 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'common.User'
 LOGIN_REDIRECT_URL = 'posts:post_list'
+LOGOUT_REDIRECT_URL = 'posts:post_list'
+
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 

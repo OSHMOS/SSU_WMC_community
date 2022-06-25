@@ -19,14 +19,14 @@
                       <span class="nav-link">안녕하세요. {{ user }}님!</span>
                   </li>
                   <li class="nav-item">
-                      <a href="{% url 'account_logout' %}" class="nav-link">로그아웃</a>
+                      <a href="{% url 'common:logout' %}" class="nav-link">로그아웃</a>
                   </li>
                   {% else %}
                   <li class="nav-item " style="user-select: auto;">
-                      <a class="nav-link" href="{% url 'account_login' %}" style="user-select: auto;"><i class="fas fa-sign-in-alt" style="user-select: auto;"></i> 로그인</a>
+                      <a class="nav-link" href="{% url 'common:login' %}" style="user-select: auto;"><i class="fas fa-sign-in-alt" style="user-select: auto;"></i> 로그인</a>
                   </li>
                   <li class="nav-item " style="user-select: auto;">
-                      <a class="nav-link" href="{% url 'account_signup' %}" style="user-select: auto;"><i class="fas fa-user-plus" style="user-select: auto;"></i> 회원가입</a>
+                      <a class="nav-link" href="{% url 'common:signup' %}" style="user-select: auto;"><i class="fas fa-user-plus" style="user-select: auto;"></i> 회원가입</a>
                   </li>  
               {% endif %}
           </ul>
