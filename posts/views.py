@@ -84,10 +84,17 @@ def post_delete(request, post_id):
 @login_required(login_url='account_login')
 def comment_create(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    content = request.POST.get('content')
-    if content.is_valid():
-        comment = Comment(post=post, content=content, author=request.user)
-        comment.save()
+    
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('posts:post_detail', post_id)
+    
+    messages.error(request, '내용이 없는 댓글은 등록할 수 없습니다.')
     return redirect('posts:post_detail', post_id)
     
 
