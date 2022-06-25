@@ -12,6 +12,10 @@ def index(request):
     return render(request, 'posts/index.html')
 
 
+def about(request):
+    return render(request, 'about.html')
+
+
 def post_list(request):
     post_list = Post.objects.order_by('-dt_created')
     paginator = Paginator(post_list, 10)
