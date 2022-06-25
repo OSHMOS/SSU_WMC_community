@@ -5,6 +5,7 @@
     <h5 class="my-3 border-bottom pb-2">게시글 수정</h5>
     <form method="post" class="post-form my-3">
         {% csrf_token %}
+        {% include 'form_errors.html' %}
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class='form-control' name="title" id="title"

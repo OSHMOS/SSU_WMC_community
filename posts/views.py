@@ -85,8 +85,9 @@ def post_delete(request, post_id):
 def comment_create(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     content = request.POST.get('content')
-    comment = Comment(post=post, content=content, author=request.user)
-    comment.save()
+    if content.is_valid():
+        comment = Comment(post=post, content=content, author=request.user)
+        comment.save()
     return redirect('posts:post_detail', post_id)
     
 
