@@ -71,6 +71,7 @@
                 {% include 'form_errors.html' %}
                 <label for="content"></label>
                 <textarea name="content" id="content"
+                        {% if post.comment_set.count < 2 %}autofocus{% endif %}
                         {% if not user.is_authenticated %}disabled{% endif %}
                         class="form-control" rows="10" ></textarea>
                 <hr>

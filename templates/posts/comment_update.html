@@ -6,8 +6,8 @@
         {% csrf_token %}
         {% include 'form_errors.html' %}
         <div class="form-group">
-            <label for="content">댓글 내용</label>
             <textarea class='form-control' name="content" id="content"
+                      autofocus
                       rows="10">{{form.content.value|default_if_none:''}}</textarea>
         </div>
         <hr>
