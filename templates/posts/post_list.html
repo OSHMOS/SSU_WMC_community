@@ -5,7 +5,7 @@
     <table class="table">
         <thead>
         <tr class="text-center thead-dark">
-            <th>번호</th>
+            <th>공감</th>
             <th style="width:50%">제목</th>
             <th>글쓴이</th>
             <th>작성일시</th>
@@ -15,7 +15,17 @@
         {% if post_list %}
         {% for post in post_list %}
         <tr class="text-center">
-            <td>{{ post_list.paginator.count|sub:post_list.start_index|sub:forloop.counter0|add:1 }}</td>
+            <td>
+                {% if post.like.all.count > 0 %}
+                <span class="badge bg-warning px-2 py-1 text-dark">
+                    {{ post.like.all.count }}
+                </span>
+                {% else %}
+                <span class="badge bg-light px-2 py-1" style="color: rgb(204, 204, 204);">
+                    {{ post.like.all.count }}
+                </span>
+                {% endif %}
+            </td>
             <td class="text-left">
                 <a href="{% url 'posts:post_detail' post.id %}">
                     {{ post.title }}
