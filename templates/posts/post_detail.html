@@ -12,17 +12,8 @@
 {% endif %}
 <div class="container my-3">
     <div class="row my-3">
-        <div class="col-1">
-            <div class="row">
-                <div class="bg-light text-center p-3 border font-weight-bolder mb-1">
-                    {{ post.like.count }}
-                </div>
-            </div> 
-            <div class="row">
-                <a href={% url 'posts:post_like' post.id %} class="btn btn-sm btn-secondary btn-block my-1 d-inline">공감</a>
-            </div>
-        </div>
-        <div class="col-11">
+        <div class="col-2 col-sm-12 col-lg-2"></div>
+        <div class="col-8 col-sm-12 col-lg-8">
             <div class="card">
                 <div class="card-body">
                     <div class="card-text" style="white-space: pre-line;">
@@ -43,17 +34,35 @@
                             </div>
                         {% endif %}
                     </div>
-                    <div class="my-3">
-                        <a href="{% url 'posts:post_list' %}"
-                            class="btn btn-sm btn-outline-secondary">목록</a>
-                        <a href="{% url 'posts:post_update' post.id %}"
-                            class="btn btn-sm btn-outline-secondary">수정</a>
-                        <a href="{% url 'posts:post_delete' post.id %}"
-                            class="delete btn btn-sm btn-outline-secondary">삭제</a>
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <a href="{% url 'posts:post_list' %}"
+                                class="btn btn-sm btn-outline-secondary">목록</a>
+                            <a href="{% url 'posts:post_update' post.id %}"
+                                class="btn btn-sm btn-outline-secondary">수정</a>
+                            <a href="{% url 'posts:post_delete' post.id %}"
+                                class="delete btn btn-sm btn-outline-secondary">삭제</a>
+                        </span>
+                        <span class="pt-1">
+                            <a href={% url 'posts:post_like' post.id %} class="text-decoration-none">
+                                <span style="color: red;" class="">
+                                    {% if user in post.like.all %}
+                                        <i class="fas fa-heart"></i>
+                                    {% else %}
+                                        <i class="far fa-heart"></i>
+                                    {% endif %}
+                                </span>
+                                <span class="text-dark">
+                                    {{ post.like.count }}
+                                </span>
+                            </a>
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-2 col-sm-12 col-lg-2"></div>
+    </div>
     {% if post.comment_set.count > 0 %}
             <div class="mt-3">
             {% for comment in post.comment_set.all %}

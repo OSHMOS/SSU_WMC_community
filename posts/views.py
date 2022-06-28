@@ -84,17 +84,11 @@ def post_delete(request, post_id):
 @login_required(login_url='account_login')
 def post_like(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.user == post.author:
-        messages.error(request, '본인이 작성한 글은 공감할 수 없습니다.')
+    
+    if post.like.filter(id=request.user.id).exists():
+        post.like.remove(request.user)
     else:
         post.like.add(request.user)
-    return redirect('posts:post_detail', post_id)
-
-
-@login_required(login_url='account_login')
-def post_like_cancel(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    post.like
     return redirect('posts:post_detail', post_id)
 
 
