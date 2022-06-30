@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.urls import reverse
 from django.contrib import messages
 from posts.models import Post
 from posts.forms import PostForm
@@ -23,19 +26,20 @@ def post_detail(request, post_id):
     return render(request, 'posts/post_detail.html', ctx)
 
 
-@login_required(login_url='account_login')
-def post_create(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('posts:post_list')
-    else:
-        form = PostForm()
-    ctx = {'form' : form}
-    return render(request, 'posts/post_form.html', ctx)
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('posts:post_list')
 
 
 @login_required(login_url='account_login')
