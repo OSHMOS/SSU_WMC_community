@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "fontawesomefree",
 ]
 
 SITE_ID = 1
@@ -154,6 +155,7 @@ LOGOUT_REDIRECT_URL = 'posts:post_list'
 
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -162,8 +164,38 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-# 임시로 이메일 인증을 어떻게 보낼지 설정해줍니다.
-# 현재는 콘솔을 통해서 이메일을 보낸다고 설정할 겁니다.
 # Email settings
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# 사이트와 관련한 자동응답을 받을 이메일 주소
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# 메일을 호스트하는 서버
+EMAIL_HOST = 'smtp.naver.com'
+
+# naver e-mail과의 통신하는 포트
+EMAIL_PORT = '465'
+
+# 발신할 이메일
+EMAIL_HOST_USER = 'ojames97@naver.com'
+
+# 발신할 메일의 비밀번호
+smtp_password_file = os.path.join(BASE_DIR, 'smtp_password.json')
+
+with open(smtp_password_file) as f:
+	smtp_password = json.loads(f.read())
+
+def get_secret(setting):
+	'''비밀 변수를 가져오거나 명시적 예외를 반환한다.'''
+	try:
+		return smtp_password[setting]
+	except KeyError:
+		error_msg = 'Set the {} environment variable'.format(setting)
+		raise ImproperlyConfigured(error_msg)
+	
+
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
+
+# SSL 보안 방법
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
