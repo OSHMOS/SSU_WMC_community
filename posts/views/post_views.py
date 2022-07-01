@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView
+from django.views.generic import ListView, CreateView
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.urls import reverse
@@ -9,15 +9,23 @@ from django.contrib import messages
 from posts.models import Post
 from posts.forms import PostForm
 
-def post_list(request):
-    post_list = Post.objects.order_by('-dt_created')
-    paginator = Paginator(post_list, 10)
-    curr_page_num = request.GET.get("page")
-    if curr_page_num == None:
-        curr_page_num = 1
-    page = paginator.page(curr_page_num)
-    ctx = {"post_list": page}
-    return render(request, 'posts/post_list.html', ctx)
+# def post_list(request):
+#     post_list = Post.objects.order_by('-dt_created')
+#     paginator = Paginator(post_list, 10)
+#     curr_page_num = request.GET.get("page")
+#     if curr_page_num == None:
+#         curr_page_num = 1
+#     page = paginator.page(curr_page_num)
+#     ctx = {"post_list": page}
+#     return render(request, 'posts/post_list.html', ctx)
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'posts/post_list.html'
+    ordering = '-dt_created'
+    paginate_by = 10
+    page_kwarg = 'page'
 
 
 def post_detail(request, post_id):

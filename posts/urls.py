@@ -9,7 +9,7 @@ urlpatterns = [
   path('about/', base_views.about, name='about'),
 
   # post_views.py
-  path('list/', post_views.post_list, name='post_list'),
+  path('list/', post_views.PostListView.as_view(), name='post_list'),
   path('detail/<int:post_id>', post_views.post_detail, name='post_detail'),
   path('create/', post_views.PostCreateView.as_view(), name='post_create'),
   path('update/<int:post_id>', post_views.post_update, name='post_update'),
