@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.urls import reverse
@@ -41,26 +41,30 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return reverse('posts:post_list')
 
 
-@login_required(login_url='account_login')
-def post_update(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'posts/post_update.html'
+    pk_url_kwarg = 'post_id'
 
-    if post.author != request.user:
-        messages.error(request, '해당 게시글 수정 권한이 없습니다.')
-        return redirect('posts:post_detail', post_id) 
+    def dispatch(self, request, *args, **kwargs):
+        object = self.get_object()
+        if object.author != request.user:
+            messages.error(request, '해당 게시글 수정 권한이 없습니다.')
+            return redirect('posts:post_detail', object.id)
+        else:
+            return super(PostUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.instance.dt_updated = timezone.now()
+        return super().form_valid(form)
     
-    if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.dt_updated = timezone.now()
-            post.author = request.user
-            post.save()
-            return redirect('posts:post_detail', post.id)
-    else:
-        form = PostForm(instance=post)
-    ctx = {'form' : form}
-    return render(request, 'posts/post_update.html', ctx)
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse('posts:post_detail', kwargs={'post_id' : self.object.id})
 
 
 @login_required(login_url='account_login')

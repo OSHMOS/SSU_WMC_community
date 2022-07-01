@@ -12,7 +12,7 @@ urlpatterns = [
   path('list/', post_views.PostListView.as_view(), name='post_list'),
   path('detail/<int:post_id>', post_views.PostDetailView.as_view(), name='post_detail'),
   path('create/', post_views.PostCreateView.as_view(), name='post_create'),
-  path('update/<int:post_id>', post_views.post_update, name='post_update'),
+  path('update/<int:post_id>', post_views.PostUpdateView.as_view(), name='post_update'),
   path('delete/<int:post_id>', post_views.post_delete, name='post_delete'),
   path('like/<int:post_id>', post_views.post_like, name='post_like'),
 
