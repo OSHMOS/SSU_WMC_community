@@ -9,6 +9,7 @@ from django.contrib import messages
 from posts.models import Post
 from posts.forms import PostForm
 
+
 class PostListView(ListView):
     model = Post
     template_name = 'posts/post_list.html'
