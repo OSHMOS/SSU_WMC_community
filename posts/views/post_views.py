@@ -19,9 +19,9 @@ class PostListView(ListView):
     paginate_by = 10
 
 
-
 class PostDetailView(DetailView):
     model = Post
+    pk_url_kwarg = 'post_id'
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -40,14 +40,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
 
-    def dispatch(self, request, *args, **kwargs):
-        object = self.get_object()
-        if object.author != request.user:
-            messages.error(request, '해당 게시글 수정 권한이 없습니다.')
-            return redirect('posts:post_detail', object.id)
-        else:
-            return super(PostUpdateView, self).dispatch(request, *args, **kwargs)
-
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.dt_updated = timezone.now()
@@ -59,14 +51,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
-
-    def dispatch(self, request, *args, **kwargs):
-        object = self.get_object()
-        if object.author != request.user:
-            messages.error(request, '해당 게시글 삭제 권한이 없습니다.')
-            return redirect('posts:post_detail', object.id)
-        else:
-            return super(PostDeleteView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('posts:post_list')

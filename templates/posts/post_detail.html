@@ -36,12 +36,17 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>
+                            {% if post.author == request.user %}
                             <a href="{% url 'posts:post_list' %}"
                                 class="btn btn-sm btn-outline-secondary">목록</a>
                             <a href="{% url 'posts:post_update' post.id %}"
                                 class="btn btn-sm btn-outline-secondary">수정</a>
                             <a href="{% url 'posts:post_delete' post.id %}"
                                 class="delete btn btn-sm btn-outline-secondary">삭제</a>
+                            {% else %}
+                            <a href="{% url 'posts:post_list' %}"
+                                class="btn btn-sm btn-outline-secondary">목록</a>
+                            {% endif %}
                         </span>
                         <span class="pt-1">
                             <a href={% url 'posts:post_like' post.id %} class="text-decoration-none">
@@ -60,38 +65,37 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-12 col-lg-2 col-md-1"></div>
-    </div>
-    {% if post.comment_set.count > 0 %}
-            <div class="mt-3">
-            {% for comment in post.comment_set.all %}
-                <div class="card-text" style="white-space: pre-line;">
-                    <p>{{ comment.content }}</p>
-                </div>
-                <div class="d-flex justify-content-end">
-                    {% if comment.dt_updated %}
-                        <div class="badge bg-light p-2 text-dark text-start mx-3">
-                            <div class="mb-2">{{ comment.author }}</div>
-                            <div>{{ comment.dt_updated }}(수정됨)</div>
+            {% if post.comment_set.count > 0 %}
+                <div class="mt-3">
+                    {% for comment in post.comment_set.all %}
+                        <div class="card-text" style="white-space: pre-line;">
+                            <p>{{ comment.content }}</p>
                         </div>
-                    {% else %}
-                        <div class="badge bg-light p-2 text-dark text-start">
-                            <div class="mb-2">{{ comment.author }}</div>
-                            <div>{{ comment.dt_created }}</div>
+                        <div class="d-flex justify-content-end">
+                            {% if comment.dt_updated %}
+                                <div class="badge bg-light p-2 text-dark text-start mx-3">
+                                    <div class="mb-2">{{ comment.author }}</div>
+                                    <div>{{ comment.dt_updated }}(수정됨)</div>
+                                </div>
+                            {% else %}
+                                <div class="badge bg-light p-2 text-dark text-start">
+                                    <div class="mb-2">{{ comment.author }}</div>
+                                    <div>{{ comment.dt_created }}</div>
+                                </div>
+                            {% endif %}
                         </div>
-                    {% endif %}
+                        <div class="my-3">
+                            {% if comment.author == request.user %}
+                                <a href="{% url 'posts:comment_update' comment.id %}"
+                                    class="btn btn-sm btn-outline-secondary">수정</a>
+                                <a href="{% url 'posts:comment_delete' comment.id %}"
+                                    class="delete btn btn-sm btn-outline-secondary">삭제</a>
+                            {% endif %}
+                        </div>
+                        <hr>
+                    {% endfor %}
                 </div>
-                <div class="my-3">
-                    <a href="{% url 'posts:comment_update' comment.id %}"
-                        class="btn btn-sm btn-outline-secondary">수정</a>
-                    <a href="{% url 'posts:comment_delete' comment.id %}"
-                        class="delete btn btn-sm btn-outline-secondary">삭제</a>
-                </div>
-                <hr>
-            {% endfor %}
-            </div>
-    {% endif %}
+            {% endif %}
             <form action="{% url 'posts:comment_create' post.id %}" method="POST" class="my-3">
                 {% csrf_token %}
                 {% include 'form_errors.html' %}
@@ -104,6 +108,7 @@
                 <input type="submit" value="등록하기" class="btn btn-primary">
             </form>
         </div>
+        <div class="col-sm-12 col-lg-2 col-md-1"></div>
     </div>
 </div>
 {% endblock %}
