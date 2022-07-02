@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.urls import reverse
@@ -12,23 +14,18 @@ from posts.forms import PostForm
 
 class PostListView(ListView):
     model = Post
-    template_name = 'posts/post_list.html'
     ordering = '-dt_created'
     paginate_by = 10
-    page_kwarg = 'page'
+
 
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'posts/post_detail.html'
-    pk_url_kwarg = 'post_id'
-    context_object_name = 'post'
 
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
-    template_name = 'posts/post_form.html'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -38,14 +35,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('posts:post_list')
+        return reverse('posts:post_detail', kwargs={'pk' : self.object.id})
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
-    template_name = 'posts/post_update.html'
-    pk_url_kwarg = 'post_id'
 
     def dispatch(self, request, *args, **kwargs):
         object = self.get_object()
@@ -64,18 +59,22 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('posts:post_detail', kwargs={'post_id' : self.object.id})
+        return reverse('posts:post_detail', kwargs={'pk' : self.object.id})
 
 
-@login_required(login_url='account_login')
-def post_delete(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if post.author != request.user:
-        messages.error(request, '해당 게시글 삭제 권한이 없습니다.')
-        return redirect('posts:post_detail', post_id)
-    else:
-        post.delete()
-    return redirect('posts:post_list')
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+
+    def dispatch(self, request, *args, **kwargs):
+        object = self.get_object()
+        if object.author != request.user:
+            messages.error(request, '해당 게시글 삭제 권한이 없습니다.')
+            return redirect('posts:post_detail', object.id)
+        else:
+            return super(PostDeleteView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('posts:post_list')
 
 
 @login_required(login_url='account_login')
