@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -30,9 +31,6 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
-    
-    def form_invalid(self, form):
-        return super().form_invalid(form)
 
     def get_success_url(self):
         return reverse('posts:post_detail', kwargs={'pk' : self.object.id})
@@ -54,9 +52,6 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.author = self.request.user
         form.instance.dt_updated = timezone.now()
         return super().form_valid(form)
-    
-    def form_invalid(self, form):
-        return super().form_invalid(form)
 
     def get_success_url(self):
         return reverse('posts:post_detail', kwargs={'pk' : self.object.id})
