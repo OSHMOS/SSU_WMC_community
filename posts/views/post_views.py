@@ -33,12 +33,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('posts:post_detail', kwargs={'pk' : self.object.id})
+        return reverse('posts:post_detail', kwargs={'post_id' : self.object.id})
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
+    template_name = "posts/post_update.html"
+    pk_url_kwarg = 'post_id'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -46,11 +48,12 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('posts:post_detail', kwargs={'pk' : self.object.id})
+        return reverse('posts:post_detail', kwargs={'post_id' : self.object.id})
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
+    pk_url_kwarg = 'post_id'
 
     def get_success_url(self):
         return reverse('posts:post_list')

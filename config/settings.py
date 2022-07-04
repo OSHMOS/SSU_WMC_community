@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "fontawesomefree",
+    "bootstrap5",
 ]
 
 SITE_ID = 1
@@ -156,6 +157,7 @@ LOGIN_REDIRECT_URL = 'posts:post_list'
 LOGOUT_REDIRECT_URL = 'posts:post_list'
 
 ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
