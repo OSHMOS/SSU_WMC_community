@@ -21,7 +21,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_author')
     dt_created = models.DateTimeField(auto_now_add=True)
     dt_updated = models.DateTimeField(null=True, blank=True)
-    like = models.ManyToManyField(User, related_name='comment_like')
+    like = models.ManyToManyField(User, blank=True, related_name='comment_like')
 
     def __str__(self):
         return self.content

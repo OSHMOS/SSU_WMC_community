@@ -28,10 +28,6 @@ def comment_create(request, post_id):
 @login_required(login_url='account_login')
 def comment_update(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-
-    if comment.author != request.user:
-        messages.error(request, '해당 댓글 수정 권한이 없습니다.')
-        return redirect('posts:post_detail', post_id=comment.post.id)
     
     if request.method == "POST":
         form = CommentForm(request.POST, instance=comment)
@@ -50,9 +46,17 @@ def comment_update(request, comment_id):
 @login_required(login_url='account_login')
 def comment_delete(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-    if comment.author != request.user:
-        messages.error(request, '해당 댓글 삭제 권한이 없습니다.')
-        return redirect('posts:post_detail', post_id=comment.post.id)
-    else:
+    if comment.author == request.user:
         comment.delete()
+    return redirect('posts:post_detail', post_id=comment.post.id)
+
+
+@login_required(login_url='account_login')
+def comment_like(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    if comment.like.filter(id=request.user.id).exists():
+        comment.like.remove(request.user)
+    else:
+        comment.like.add(request.user)
     return redirect('posts:post_detail', post_id=comment.post.id)
